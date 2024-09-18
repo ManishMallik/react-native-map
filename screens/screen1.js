@@ -110,7 +110,7 @@ export default function Screen1({navigation}) {
         </Appbar.Header>
       {/* Google Places Autocomplete */}
       <GooglePlacesAutocomplete
-        placeholder="Search for places"
+        placeholder="Search for places (Screen 1)"
         fetchDetails={true}
         onPress={(data, details = null) => {
           const { lat, lng } = details.geometry.location;

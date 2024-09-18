@@ -12,7 +12,14 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.example.react-native-map",
+      "config": {
+        "googleMapsApiKey": "AIzaSyAop2MGFk3XPh0PwpYtVCmogmFoB_lOfMs"
+      },
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "This app uses your location to display your current position on the map"
+      }
     },
     "android": {
       "adaptiveIcon": {

@@ -121,14 +121,13 @@ export default function Screen1({navigation}) {
           language: 'en',
         }}
         styles={{
-          container: { width: '100%', padding: 10 },
+          container: { width: '100%', padding: 10, zIndex: 1 },
           //Add a borderline
           textInput: { borderWidth: 1, borderRadius: 5 },
         }}
       />
 
       {/* MapView */}
-      {/* <View style={styles.mapContainer}> */}
         {location && (
             <MapView
             style={styles.map}
@@ -154,16 +153,17 @@ export default function Screen1({navigation}) {
             )}
             </MapView>
         )}
-      {/* </View> */}
 
       {/* Clear markers button */}
-      <Button
-        title="Clear Markers"
-        onPress={() => {
-          setMarkers([]);
-          setRouteCoords([]);
-        }}
-      />
+      <View style={styles.buttonContainer}>
+        <Button
+          title="Clear Markers"
+          onPress={() => {
+            setMarkers([]);
+            setRouteCoords([]);
+          }}
+        />
+      </View>
     </View>
   );
 }
@@ -171,14 +171,15 @@ export default function Screen1({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
   },
   map: {
     width: '100%',
     height: '60%',
+    flex: 10,
   },
-  mapContainer: {
-    flex: 1, // Take remaining space below the header and autocomplete
+  buttonContainer: {
+    flex: 3,
   },
 });

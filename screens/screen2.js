@@ -28,6 +28,10 @@ export default function Screen2({navigation}) {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       });
+
+      // Add this location
+      setMarkers([{latitude: currentLocation.coords.latitude, longitude: currentLocation.coords.longitude}]);
+
     })();
   }, []);
 
@@ -35,10 +39,35 @@ export default function Screen2({navigation}) {
   const addMarker = (location) => {
     setMarkers([...markers, location]);
 
+    console.log(markers);
+
     // If there are two markers, calculate the route
     if (markers.length === 1) {
       getDirections(markers[0], location);
     }
+  };
+
+  // Calculate distance between user's current location and a marker
+  const calculateDistance = (marker) => {
+    if (!location) return null;
+
+    const R = 6371e3; // metres
+    const φ1 = location.latitude * Math.PI / 180; // φ, λ in radians
+    const φ2 = marker.latitude * Math.PI / 180;
+    const Δφ = (marker.latitude - location.latitude) * Math.PI / 180;
+    const Δλ = (marker.longitude - location.longitude) * Math.PI / 180;
+
+    const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+              Math.cos(φ1) * Math.cos(φ2) *
+              Math.sin(Δλ/2) * Math.sin(Δλ/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+    return R * c; // in metres
+  };
+
+  // Draw route between user's current location and a marker
+  const drawRoute = (marker) => {
+    getDirections(location, marker);
   };
 
   // Remove a marker from the map
@@ -101,7 +130,7 @@ export default function Screen2({navigation}) {
 
   return (
     <View style={styles.container}>
-        <Appbar.Header>
+        <Appbar.Header style={{minWidth: '100%'}}>
             <Appbar.BackAction onPress={() => navigation.goBack()} />
             <Appbar.Content title="Screen 2" />
         </Appbar.Header>
@@ -118,7 +147,7 @@ export default function Screen2({navigation}) {
           language: 'en',
         }}
         styles={{
-          container: { position: 'absolute', top: 70, width: '100%', zIndex: 1 },
+          container: { width: '100%', padding: 10, zIndex: 1, flex: 1 },
           //Add a borderline
           textInput: { borderWidth: 1, borderRadius: 5 },
         }}
@@ -152,13 +181,15 @@ export default function Screen2({navigation}) {
       )}
 
       {/* Clear markers button */}
-      <Button
-        title="Clear Markers"
-        onPress={() => {
-          setMarkers([]);
-          setRouteCoords([]);
-        }}
-      />
+      <View style={styles.buttonContainer}>
+        <Button
+          title="Clear Markers"
+          onPress={() => {
+            setMarkers([]);
+            setRouteCoords([]);
+          }}
+        />
+      </View>
     </View>
   );
 }
@@ -166,11 +197,15 @@ export default function Screen2({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
   },
   map: {
     width: '100%',
-    height: '60%',
+    // height: '70%',
+    flex: 4,
+  },
+  buttonContainer: {
+    flex: 0.75,
   },
 });

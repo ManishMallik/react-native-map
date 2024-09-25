@@ -13,6 +13,7 @@ export default function Home({ navigation }) {
         <View style={{padding: 10}} />
         <Text style={{fontSize: 25, fontWeight: 'bold', padding: 10}}>Welcome to my Trip Planner App!</Text>
         <View style={{padding: 30}} />
+        {/* Buttons for screen 1 and screen 2 were for just experimenting with expo maps */}
         {/* <Button
             title="Go to Screen 1"
             onPress={() => navigation.navigate('Screen1')}

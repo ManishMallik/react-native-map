@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Appbar } from 'react-native-paper';
 
+// Screen to display the recommended itinerary
 export default function Screen3Pt5({ route, navigation }) {
     const { roadRoutes, sortedCoordinates } = route.params;
 
@@ -16,7 +17,6 @@ export default function Screen3Pt5({ route, navigation }) {
                 <View key={index} style={styles.routeContainer}>
                     <Text style={styles.routeTitle}>{sortedCoordinates[index].name} to {sortedCoordinates[index + 1]?.name}</Text>
                     <Text>Estimated Travel Time: {route.travelTime}</Text>
-                    {/* You can add more details if needed */}
                 </View>
             ))}
             <Text style={styles.footer}>Remember, you can take breaks during your journey. You can also add any additional stops to update your itinerary if you want to.</Text>

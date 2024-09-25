@@ -3,7 +3,7 @@ import { View, StyleSheet, Button, Text, TextInput } from 'react-native';
 import axios from 'axios';
 import { Appbar } from 'react-native-paper';
 
-// In this screen, there will be a text input field for the user to enter where they would like to go to
+// In this screen, there will be a text input field for the user to enter where they would like to go
 export default function Screen3Pt1({ navigation }) {
 
     const [text, setText] = useState('');

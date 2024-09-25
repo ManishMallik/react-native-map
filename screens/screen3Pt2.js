@@ -6,7 +6,7 @@ import { Appbar } from 'react-native-paper';
 import { GOOGLE_MAPS_API_KEY } from '@env';
 import * as Location from 'expo-location';
 
-// In this screen, there will be a text input field for the user to enter where they will be coming from
+// In this screen, there will be a text input field for user to enter where they will be coming from
 export default function Screen3Pt2({ route, navigation }) {
     
         const { location, time, selectedLocations } = route.params;

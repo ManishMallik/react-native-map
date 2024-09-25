@@ -1,4 +1,4 @@
-//Ignore this screen, this was only for my testing purposes with React Native Maps
+//Ignore this screen, it was only for my testing purposes with React Native Maps
 
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Button, Text } from 'react-native';

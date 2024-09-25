@@ -3,7 +3,7 @@ import { View, StyleSheet, Button, Text } from 'react-native';
 import axios from 'axios';
 import { Appbar } from 'react-native-paper';
 
-// This screen is the home screen of the app
+// This is the home screen of the app
 export default function Home({ navigation }) {
 
     return (

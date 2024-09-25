@@ -293,6 +293,7 @@ export default function Screen3Pt4({ route, navigation }) {
 
             console.log(response.data.result);
 
+            // Display an alert to the user
             alert('Trip saved successfully!');
         } catch (error) {
             console.log(error);

@@ -3,7 +3,7 @@ import { View, StyleSheet, Button, Text, Alert, TouchableOpacity } from 'react-n
 import axios from 'axios';
 import { Appbar } from 'react-native-paper';
 
-// Screen to load planned trips
+// Screen to load planned trips that were saved
 export default function Screen4Pt1({ navigation }) {
 
     const [trips, setTrips] = useState([]);

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Button, Text } from 'react-native';
-
-// Import the navigation
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
+// Initialize the Stack Navigator
 const Stack = createStackNavigator();
 
 // Import the screens

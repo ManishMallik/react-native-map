@@ -7,7 +7,7 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 
 import { GOOGLE_MAPS_API_KEY } from '@env';
 
-// In this screen, the user will be able to select locations they would like to visit
+// In this screen, the user will be able to select locations that they would like to visit
 export default function Screen3Pt3({ route, navigation }) {
 
     const { location, time, locationResponses } = route.params;

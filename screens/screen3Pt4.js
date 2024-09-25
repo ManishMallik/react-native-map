@@ -260,6 +260,7 @@ export default function Screen3Pt4({ route, navigation }) {
 
     const saveMapData = async (coordinates, routes, steps) => {
         try {
+            // Remove the starting location from the coordinates list since we will save it in a separate field
             const filteredCoordinates = coordinates.slice(1);
             const response = await axios.post(`http://192.168.1.133:3000/api/save`, {
                 startingLocation: {

@@ -13,6 +13,7 @@ export default function Screen3Pt2({ route, navigation }) {
         const [text, setText] = useState('');
         const [data, setData] = useState(null);
 
+        // Submit the user's selected starting location and data from the previous screens to the next screen
         async function submit(input) {
             console.log(location + " " + time);
             try {

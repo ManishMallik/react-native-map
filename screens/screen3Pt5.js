@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Appbar } from 'react-native-paper';
 
-// Screen to display the recommended itinerary
+// Screen to display the recommended itinerary based on data from the maps screen
 export default function Screen3Pt5({ route, navigation }) {
     const { roadRoutes, sortedCoordinates } = route.params;
 

@@ -18,7 +18,7 @@ import Screen3Pt4 from './screens/screen3Pt4';
 import Screen3Pt5 from './screens/screen3Pt5';
 import Screen4Pt1 from './screens/screen4Pt1';
 
-// Stack Navigator
+// Stack Navigator for the app
 export default function App() {
   
   return (

@@ -30,7 +30,7 @@ export default function Screen3Pt4({ route, navigation }) {
                         return;
                     }
                 }
-
+                // Get the starting location
                 let startLocation = comingFromData !== null ? comingFromData : await Location.getCurrentPositionAsync({});
                 console.log("Start Location:", startLocation);
                 const startCoord = {
@@ -93,6 +93,7 @@ export default function Screen3Pt4({ route, navigation }) {
 
                 console.log("Is roadRoutes an array? " + Array.isArray(roadRoutes));
 
+                // Set the road routes and filter out null values
                 setRoadRoutes(roadRoutes.filter(Boolean));
 
             } catch (error) {
@@ -104,6 +105,7 @@ export default function Screen3Pt4({ route, navigation }) {
         fetchCoordinates();
     }, [selectedLocations, comingFromData]);
 
+    // Get directions between two locations using Google Maps Directions API
     const getDirections = async (origin, destination) => {
         try {
             const API_KEY = GOOGLE_MAPS_API_KEY;
@@ -112,10 +114,11 @@ export default function Screen3Pt4({ route, navigation }) {
             );
     
             if (response.data.routes && response.data.routes.length > 0) {
+                // Get both points and travel time, and return those
                 const points = decodePolyline(response.data.routes[0].overview_polyline.points);
-                const travelTime = response.data.routes[0].legs[0].duration.text; // Get travel time
+                const travelTime = response.data.routes[0].legs[0].duration.text;
     
-                return { points, travelTime }; // Return both points and travel time
+                return { points, travelTime };
             } else {
                 console.error("Invalid or empty routes returned from API", response.data);
                 return { points: [], travelTime: "N/A" };
@@ -126,11 +129,13 @@ export default function Screen3Pt4({ route, navigation }) {
         }
     };
 
+    // Add a marker to the map
     const addMarker = async (location) => {
         const updatedCoordinates = [...sortedCoordinates, location];
         const updatedSortedCoordinates = sortLocationsByDistance(startCoordinate, updatedCoordinates);
         setSortedCoordinates(updatedSortedCoordinates);
     
+        // If there are less than two locations, then there are no routes to show
         if (updatedSortedCoordinates.length < 2) {
             setRoadRoutes([]);
             return;
@@ -156,6 +161,7 @@ export default function Screen3Pt4({ route, navigation }) {
         }
     };
     
+    // Remove a marker from the map
     const removeMarker = async (indexToRemove) => {
         const updatedCoordinates = sortedCoordinates.filter((_, index) => index !== indexToRemove);
         const updatedSortedCoordinates = sortLocationsByDistance(startCoordinate, updatedCoordinates);
@@ -258,10 +264,13 @@ export default function Screen3Pt4({ route, navigation }) {
         return reordered;
     };
 
+    // Save the map data to the server
     const saveMapData = async (coordinates, routes, steps) => {
         try {
             // Remove the starting location from the coordinates list since we will save it in a separate field
             const filteredCoordinates = coordinates.slice(1);
+
+            // Send the data to the server
             const response = await axios.post(`http://192.168.1.133:3000/api/save`, {
                 startingLocation: {
                     latitude: startCoordinate.latitude,
@@ -297,6 +306,7 @@ export default function Screen3Pt4({ route, navigation }) {
                 <Appbar.Content title="Trip Map" />
             </Appbar.Header>
 
+            {/* Display the Google Places Autocomplete component when needed */}
             {
                 visibility && (
                     <GooglePlacesAutocomplete

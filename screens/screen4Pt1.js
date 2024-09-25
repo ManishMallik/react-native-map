@@ -8,6 +8,7 @@ export default function Screen4Pt1({ navigation }) {
 
     const [trips, setTrips] = useState([]);
 
+    // Load the saved trips
     useEffect(() => {
         axios.get('http://192.168.1.133:3000/api/data')
             .then(res => {
@@ -18,6 +19,7 @@ export default function Screen4Pt1({ navigation }) {
             });
     }, []);
 
+    // Delete a planned trip
     const deleteTrip = (index) => {
         Alert.alert(
             "Delete Trip",

@@ -21,6 +21,7 @@ export default function Screen3Pt3({ route, navigation }) {
     console.log(Array.isArray(locations));
     console.log(typeof locations);
 
+    // Handle the user's selection of locations
     const handleLocationSelect = (place) => {
         if (selectedLocations.includes(place)) {
             setSelectedLocations(selectedLocations.filter(loc => loc !== place));
@@ -29,12 +30,14 @@ export default function Screen3Pt3({ route, navigation }) {
         }
     }
 
+    // Submit the user's selected locations to the next screen
     const submitSelections = () => {
         console.log("Locations: " + locations);
         console.log("Selected Locations: " + selectedLocations);
         navigation.navigate('Screen3Pt2', { location, time, selectedLocations });
     }
 
+    // Add a location to the list of locations
     const addLocation = (location) => {
         setLocations([...locations, location]);
     }
@@ -48,6 +51,7 @@ export default function Screen3Pt3({ route, navigation }) {
             <View style={{padding: 10}} />
             <Text>Here are some recommended locations for you to visit. Select which ones you would like to go to:</Text>
             <View style={{padding: 10}} />
+            {/* Display the GooglePlacesAutocomplete if needed */}
             {
                 visibility && (
                     <GooglePlacesAutocomplete
@@ -76,6 +80,7 @@ export default function Screen3Pt3({ route, navigation }) {
                     />
                 )
             }
+            {/* Display the recommended locations */}
             <View style={styles.listContainer}>
                 {locations.map((item) => (
                     <View key={item.id ? item.id.toString() : item.name} style={styles.itemContainer}>

@@ -9,13 +9,16 @@ export default function Screen3Pt1({ navigation }) {
     const [text, setText] = useState('');
     const [days, setDays] = useState(1);
 
+    // Submit the user's prompt and number of days to OpenAI in backend
     async function submit() {
 
+        // Check if the user entered something
         if(text === '') {
             alert("Please enter a location");
             return;
         }
 
+        // Check if the user entered a valid number of days
         try {
             const response = await axios.get(`http://192.168.1.133:3000/api/location`, {
                 params: {
@@ -26,6 +29,7 @@ export default function Screen3Pt1({ navigation }) {
 
             console.log(response.data.result);
             
+            // Navigate to the next screen
             navigation.navigate('Screen3Pt3', { 
                 location: text,
                 time: days, 

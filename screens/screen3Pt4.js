@@ -293,7 +293,6 @@ export default function Screen3Pt4({ route, navigation }) {
             <Appbar.Header style={{minWidth: '100%'}}>
                 <Appbar.BackAction onPress={() => navigation.goBack()} />
                 <Appbar.Content title="Trip Map" />
-                <Appbar.Action icon="home" onPress={() => navigation.navigate("Home")} />
             </Appbar.Header>
 
             {
@@ -398,6 +397,10 @@ export default function Screen3Pt4({ route, navigation }) {
                 onPress={() => {
                     saveMapData(sortedCoordinates, roadRoutes, roadRoutes.flatMap(route => route.steps));
                 }}
+            />
+            <Button
+                title="Go back home"
+                onPress={() => navigation.navigate("Home")}
             />
         </View>
     );

@@ -1,3 +1,5 @@
+//Ignore this
+
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Button, Text } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
@@ -5,7 +7,6 @@ import * as Location from 'expo-location';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { Appbar } from 'react-native-paper';
 
-// Get the API key from the env file
 import {GOOGLE_MAPS_API_KEY} from '@env';
 
 export default function Screen1({navigation}) {

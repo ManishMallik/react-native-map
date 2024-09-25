@@ -1,3 +1,5 @@
+//Ignore this screen
+
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Button, Text } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
@@ -5,10 +7,9 @@ import * as Location from 'expo-location';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { Appbar } from 'react-native-paper';
 
-// Get the API key from the env file
-import {GOOGLE_MAPS_API_KEY} from '@env'
+import { GOOGLE_MAPS_API_KEY } from '@env';
 
-export default function Screen2({navigation}) {
+export default function Screen2({ navigation }) {
   const [location, setLocation] = useState(null);
   const [markers, setMarkers] = useState([]);
   const [routeCoords, setRouteCoords] = useState([]);
@@ -29,75 +30,76 @@ export default function Screen2({navigation}) {
         longitudeDelta: 0.0421,
       });
 
-      // Add this location
-      setMarkers([{latitude: currentLocation.coords.latitude, longitude: currentLocation.coords.longitude}]);
-
+      // Add this location as the initial marker (user's current location)
+      addMarker({
+        latitude: currentLocation.coords.latitude,
+        longitude: currentLocation.coords.longitude,
+      }, true); // Pass true for the initial marker to prevent route drawing
     })();
   }, []);
 
-  // Add a marker to the map
-  const addMarker = (location) => {
-    setMarkers([...markers, location]);
+  // Add a marker to the map and recalculate routes
+  const addMarker = (location, isInitial = false) => {
+    const updatedMarkers = [...markers, location];
+    setMarkers(updatedMarkers);
 
-    console.log(markers);
-
-    // If there are two markers, calculate the route
-    if (markers.length === 1) {
-      getDirections(markers[0], location);
+    if (!isInitial) {
+      recalculateRoutes(updatedMarkers);
     }
   };
 
-  // Calculate distance between user's current location and a marker
-  const calculateDistance = (marker) => {
-    if (!location) return null;
-
-    const R = 6371e3; // metres
-    const φ1 = location.latitude * Math.PI / 180; // φ, λ in radians
-    const φ2 = marker.latitude * Math.PI / 180;
-    const Δφ = (marker.latitude - location.latitude) * Math.PI / 180;
-    const Δλ = (marker.longitude - location.longitude) * Math.PI / 180;
-
-    const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
-              Math.cos(φ1) * Math.cos(φ2) *
-              Math.sin(Δλ/2) * Math.sin(Δλ/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-
-    return R * c; // in metres
-  };
-
-  // Draw route between user's current location and a marker
-  const drawRoute = (marker) => {
-    getDirections(location, marker);
-  };
-
-  // Remove a marker from the map
+  // Remove a marker and recalculate routes
   const removeMarker = (index) => {
-    setMarkers(markers.filter((_, i) => i !== index));
-    setRouteCoords([]); // Remove route when a marker is deleted
+    const updatedMarkers = markers.filter((_, i) => i !== index);
+    setMarkers(updatedMarkers);
+    recalculateRoutes(updatedMarkers);
   };
 
-  // Get directions from Google Maps Directions API
+  // Recalculate routes between all consecutive markers
+  const recalculateRoutes = async (updatedMarkers) => {
+    const routes = [];
+
+    // Loop through the markers to calculate routes between each consecutive pair
+    for (let i = 0; i < updatedMarkers.length - 1; i++) {
+      const startLoc = updatedMarkers[i];
+      const destinationLoc = updatedMarkers[i + 1];
+
+      const route = await getDirections(startLoc, destinationLoc);
+      if (route && route.length > 0) {
+        routes.push(...route);
+      }
+    }
+
+    // Update the route coordinates with the newly calculated routes
+    setRouteCoords(routes);
+  };
+
+  // Get directions between two locations from Google Maps Directions API
   const getDirections = async (startLoc, destinationLoc) => {
     const start = `${startLoc.latitude},${startLoc.longitude}`;
     const destination = `${destinationLoc.latitude},${destinationLoc.longitude}`;
 
     const apiKey = GOOGLE_MAPS_API_KEY;
     const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${start}&destination=${destination}&key=${apiKey}`;
-    
+
     try {
       const response = await fetch(url);
       const data = await response.json();
 
       if (data.routes.length) {
         const points = decode(data.routes[0].overview_polyline.points);
-        setRouteCoords(points.map(point => ({ latitude: point[0], longitude: point[1] })));
+        return points.map(point => ({ latitude: point[0], longitude: point[1] }));
+      } else {
+        console.warn("No routes found");
+        return [];
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching directions:", error);
+      return [];
     }
   };
 
-  // Decode the polyline points from Directions API response
+  // Decode polyline points from the Directions API response
   const decode = (t, e) => {
     let points = [];
     let index = 0, len = t.length;
@@ -130,10 +132,11 @@ export default function Screen2({navigation}) {
 
   return (
     <View style={styles.container}>
-        <Appbar.Header style={{minWidth: '100%'}}>
-            <Appbar.BackAction onPress={() => navigation.goBack()} />
-            <Appbar.Content title="Screen 2" />
-        </Appbar.Header>
+      <Appbar.Header style={{ minWidth: '100%' }}>
+        <Appbar.BackAction onPress={() => navigation.goBack()} />
+        <Appbar.Content title="Screen 2" />
+      </Appbar.Header>
+
       {/* Google Places Autocomplete */}
       <GooglePlacesAutocomplete
         placeholder="Search for places (Screen 2)"
@@ -148,7 +151,6 @@ export default function Screen2({navigation}) {
         }}
         styles={{
           container: { width: '100%', padding: 10, zIndex: 1, flex: 1 },
-          //Add a borderline
           textInput: { borderWidth: 1, borderRadius: 5 },
         }}
       />
@@ -164,8 +166,10 @@ export default function Screen2({navigation}) {
             <Marker
               key={index}
               coordinate={marker}
+              title={`Marker ${index + 1}`}  // Add title
+              description="Tap here to remove"
               draggable
-              onCalloutPress={() => removeMarker(index)}
+              onCalloutPress={() => removeMarker(index)} // Trigger marker removal on callout press
             />
           ))}
 
@@ -202,7 +206,6 @@ const styles = StyleSheet.create({
   },
   map: {
     width: '100%',
-    // height: '70%',
     flex: 4,
   },
   buttonContainer: {
